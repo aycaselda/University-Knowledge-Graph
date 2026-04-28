@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15/"
+     xml:base="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-15="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#belongsTo">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#person"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#department"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#hasPrerequisite -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#hasPrerequisite">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+        <owl:propertyDisjointWith rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#isEnrolledIn"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#isEnrolledIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#isEnrolledIn">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#teaches -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#teaches">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#professors"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#academicTerm -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#academicTerm"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#department -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#department"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#person -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#person"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#professors -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#professors">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#person"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Automata_Theory -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Automata_Theory">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Ayca_Keskin -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Ayca_Keskin">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Computer_Engineering"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Automata_Theory"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Knowledge_Engineering_and_Ontologies"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Can -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Can">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#professors"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mechanical_Engineering"/>
+        <untitled-ontology-15:teaches rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Civil_Engineering -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Civil_Engineering">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#department"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Computer_Engineering -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Computer_Engineering">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#department"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Efe_Sarıgül -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Efe_Sarıgül">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Computer_Engineering"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Knowledge_Engineering_and_Ontologies"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Operating_Systems"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Fall -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Fall">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#academicTerm"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Gamze -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Gamze">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#professors"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Computer_Engineering"/>
+        <untitled-ontology-15:teaches rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Automata_Theory"/>
+        <untitled-ontology-15:teaches rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Knowledge_Engineering_and_Ontologies"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Knowledge_Engineering_and_Ontologies -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Knowledge_Engineering_and_Ontologies">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+        <untitled-ontology-15:hasPrerequisite rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Automata_Theory"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mathematics -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mathematics">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mechanical_Engineering -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mechanical_Engineering">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#department"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Nihat -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Nihat">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#professors"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Computer_Engineering"/>
+        <untitled-ontology-15:teaches rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Operating_Systems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Operating_Systems -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Operating_Systems">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+        <untitled-ontology-15:hasPrerequisite rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#course"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Sinem -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Sinem">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Civil_Engineering"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mathematics"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Physics"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Spring -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Spring">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#academicTerm"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Özgür -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Özgür">
+        <rdf:type rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#student"/>
+        <untitled-ontology-15:belongsTo rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mechanical_Engineering"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Knowledge_Engineering_and_Ontologies"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Mathematics"/>
+        <untitled-ontology-15:isEnrolledIn rdf:resource="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#Operating_Systems"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#hasPrerequisite"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#isEnrolledIn"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/untitled-ontology-15#teaches"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
