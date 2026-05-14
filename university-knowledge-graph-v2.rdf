@@ -1,0 +1,2498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+    xmlns="http://www.semanticweb.org/ayca/ontologies/2026/3/university-kg#"
+    xml:base="http://www.semanticweb.org/ayca/ontologies/2026/3/university-kg#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:ukg="http://www.semanticweb.org/ayca/ontologies/2026/3/university-kg#">
+
+  <!-- ONTOLOGY DECLARATION -->
+  <owl:Ontology rdf:about="http://www.semanticweb.org/ayca/ontologies/2026/3/university-kg">
+    <rdfs:label xml:lang="en">University Knowledge Graph Ontology v2</rdfs:label>
+    <rdfs:label xml:lang="tr">Üniversite Bilgi Grafiği Ontolojisi v2</rdfs:label>
+    <rdfs:comment xml:lang="en">Extended ontology for Manisa Celal Bayar University Engineering Faculty. Models courses, academic staff, departments, and sub-fields. Version 2 adds MandatoryCourse/ElectiveCourse subclasses, ResearchAssistant class, SubField class, extended data properties, and real data from CSE, MEE, and IE departments.</rdfs:comment>
+    <owl:versionInfo>2.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <!-- ============================================================ -->
+  <!-- OBJECT PROPERTIES                                            -->
+  <!-- ============================================================ -->
+
+  <owl:ObjectProperty rdf:about="ukg:belongsTo">
+    <rdfs:domain rdf:resource="ukg:person"/>
+    <rdfs:range rdf:resource="ukg:department"/>
+    <rdfs:label xml:lang="en">belongs to</rdfs:label>
+    <rdfs:comment xml:lang="en">Relates a person to their department.</rdfs:comment>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:worksIn">
+    <rdfs:domain rdf:resource="ukg:academicStaff"/>
+    <rdfs:range rdf:resource="ukg:subField"/>
+    <rdfs:label xml:lang="en">works in</rdfs:label>
+    <rdfs:comment xml:lang="en">Relates an academic staff member to their sub-field (anabilim dalı).</rdfs:comment>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:hasSubField">
+    <rdfs:domain rdf:resource="ukg:department"/>
+    <rdfs:range rdf:resource="ukg:subField"/>
+    <rdfs:label xml:lang="en">has sub-field</rdfs:label>
+    <rdfs:comment xml:lang="en">Relates a department to its academic sub-fields.</rdfs:comment>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:hasCourse">
+    <rdfs:domain rdf:resource="ukg:department"/>
+    <rdfs:range rdf:resource="ukg:course"/>
+    <rdfs:label xml:lang="en">has course</rdfs:label>
+    <rdfs:comment xml:lang="en">Relates a department to the courses it offers.</rdfs:comment>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:offeredIn">
+    <rdfs:domain rdf:resource="ukg:course"/>
+    <rdfs:range rdf:resource="ukg:academicTerm"/>
+    <rdfs:label xml:lang="en">offered in</rdfs:label>
+    <rdfs:comment xml:lang="en">Relates a course to the academic term it is offered in.</rdfs:comment>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:hasPrerequisite">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:domain rdf:resource="ukg:course"/>
+    <rdfs:range rdf:resource="ukg:course"/>
+    <rdfs:label xml:lang="en">has prerequisite</rdfs:label>
+    <rdfs:comment xml:lang="en">A course requires another course as prerequisite. Transitive.</rdfs:comment>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:isEnrolledIn">
+    <rdfs:domain rdf:resource="ukg:student"/>
+    <rdfs:range rdf:resource="ukg:course"/>
+    <rdfs:label xml:lang="en">is enrolled in</rdfs:label>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:teaches">
+    <rdfs:domain rdf:resource="ukg:professor"/>
+    <rdfs:range rdf:resource="ukg:course"/>
+    <rdfs:label xml:lang="en">teaches</rdfs:label>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="ukg:supervises">
+    <rdfs:domain rdf:resource="ukg:professor"/>
+    <rdfs:range rdf:resource="ukg:researchAssistant"/>
+    <rdfs:label xml:lang="en">supervises</rdfs:label>
+  </owl:ObjectProperty>
+
+  <rdf:Description>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
+    <owl:members rdf:parseType="Collection">
+      <rdf:Description rdf:about="ukg:hasPrerequisite"/>
+      <rdf:Description rdf:about="ukg:isEnrolledIn"/>
+      <rdf:Description rdf:about="ukg:teaches"/>
+    </owl:members>
+  </rdf:Description>
+
+  <!-- ============================================================ -->
+  <!-- DATA PROPERTIES                                              -->
+  <!-- ============================================================ -->
+
+  <owl:DatatypeProperty rdf:about="ukg:courseCode">
+    <rdfs:domain rdf:resource="ukg:course"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">course code</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:courseName">
+    <rdfs:domain rdf:resource="ukg:course"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">course name</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:semester">
+    <rdfs:domain rdf:resource="ukg:course"/>
+    <rdfs:range rdf:resource="xsd:integer"/>
+    <rdfs:label xml:lang="en">semester (1-8)</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:fullName">
+    <rdfs:domain rdf:resource="ukg:person"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">full name</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:title">
+    <rdfs:domain rdf:resource="ukg:academicStaff"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">academic title</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:email">
+    <rdfs:domain rdf:resource="ukg:person"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">email address</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:avesisURL">
+    <rdfs:domain rdf:resource="ukg:academicStaff"/>
+    <rdfs:range rdf:resource="xsd:anyURI"/>
+    <rdfs:label xml:lang="en">AVESİS profile URL</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:studentID">
+    <rdfs:domain rdf:resource="ukg:student"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">student ID</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:GPA">
+    <rdfs:domain rdf:resource="ukg:student"/>
+    <rdfs:range rdf:resource="xsd:float"/>
+    <rdfs:label xml:lang="en">GPA (0.0 - 4.0)</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:departmentName">
+    <rdfs:domain rdf:resource="ukg:department"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">department name</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="ukg:subFieldName">
+    <rdfs:domain rdf:resource="ukg:subField"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+    <rdfs:label xml:lang="en">sub-field name</rdfs:label>
+  </owl:DatatypeProperty>
+
+  <!-- ============================================================ -->
+  <!-- CLASSES                                                      -->
+  <!-- ============================================================ -->
+
+  <owl:Class rdf:about="ukg:academicTerm">
+    <rdfs:label xml:lang="en">Academic Term</rdfs:label>
+    <rdfs:comment xml:lang="en">A semester or academic period (Fall, Spring).</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:department">
+    <rdfs:label xml:lang="en">Department</rdfs:label>
+    <rdfs:comment xml:lang="en">An engineering department at MCBU.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:subField">
+    <rdfs:label xml:lang="en">Sub-Field (Anabilim Dalı)</rdfs:label>
+    <rdfs:comment xml:lang="en">Academic sub-field within a department.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:course">
+    <rdfs:label xml:lang="en">Course</rdfs:label>
+    <rdfs:comment xml:lang="en">A course offered by a department.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:mandatoryCourse">
+    <rdfs:subClassOf rdf:resource="ukg:course"/>
+    <rdfs:label xml:lang="en">Mandatory Course</rdfs:label>
+    <rdfs:comment xml:lang="en">A course that is compulsory for students (Zorunlu).</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:electiveCourse">
+    <rdfs:subClassOf rdf:resource="ukg:course"/>
+    <rdfs:label xml:lang="en">Elective Course</rdfs:label>
+    <rdfs:comment xml:lang="en">A course that students can optionally select (Seçmeli).</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:person">
+    <rdfs:label xml:lang="en">Person</rdfs:label>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:academicStaff">
+    <rdfs:subClassOf rdf:resource="ukg:person"/>
+    <rdfs:label xml:lang="en">Academic Staff</rdfs:label>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:professor">
+    <rdfs:subClassOf rdf:resource="ukg:academicStaff"/>
+    <rdfs:label xml:lang="en">Professor / Lecturer</rdfs:label>
+    <rdfs:comment xml:lang="en">Full professor, associate professor, or assistant professor (Öğretim Üyesi).</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:researchAssistant">
+    <rdfs:subClassOf rdf:resource="ukg:academicStaff"/>
+    <rdfs:label xml:lang="en">Research Assistant (Araştırma Görevlisi)</rdfs:label>
+  </owl:Class>
+
+  <owl:Class rdf:about="ukg:student">
+    <rdfs:subClassOf rdf:resource="ukg:person"/>
+    <rdfs:label xml:lang="en">Student</rdfs:label>
+  </owl:Class>
+
+  <!-- Disjoint: professor and researchAssistant -->
+  <rdf:Description>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+    <owl:members rdf:parseType="Collection">
+      <rdf:Description rdf:about="ukg:professor"/>
+      <rdf:Description rdf:about="ukg:researchAssistant"/>
+      <rdf:Description rdf:about="ukg:student"/>
+    </owl:members>
+  </rdf:Description>
+
+  <!-- Disjoint: mandatoryCourse and electiveCourse -->
+  <rdf:Description>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+    <owl:members rdf:parseType="Collection">
+      <rdf:Description rdf:about="ukg:mandatoryCourse"/>
+      <rdf:Description rdf:about="ukg:electiveCourse"/>
+    </owl:members>
+  </rdf:Description>
+
+  <!-- ============================================================ -->
+  <!-- ACADEMIC TERMS                                               -->
+  <!-- ============================================================ -->
+
+  <ukg:academicTerm rdf:about="ukg:Fall">
+    <rdfs:label xml:lang="en">Fall Semester</rdfs:label>
+  </ukg:academicTerm>
+
+  <ukg:academicTerm rdf:about="ukg:Spring">
+    <rdfs:label xml:lang="en">Spring Semester</rdfs:label>
+  </ukg:academicTerm>
+
+  <!-- ============================================================ -->
+  <!-- DEPARTMENTS                                                  -->
+  <!-- ============================================================ -->
+
+  <ukg:department rdf:about="ukg:CSE_Dept">
+    <ukg:departmentName>Computer Engineering</ukg:departmentName>
+    <rdfs:label xml:lang="en">Computer Engineering Department</rdfs:label>
+    <rdfs:label xml:lang="tr">Bilgisayar Mühendisliği Bölümü</rdfs:label>
+    <ukg:hasSubField rdf:resource="ukg:SF_Software"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_ComputerScience"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_Hardware"/>
+  </ukg:department>
+
+  <ukg:department rdf:about="ukg:MEE_Dept">
+    <ukg:departmentName>Mechanical Engineering</ukg:departmentName>
+    <rdfs:label xml:lang="en">Mechanical Engineering Department</rdfs:label>
+    <rdfs:label xml:lang="tr">Makine Mühendisliği Bölümü</rdfs:label>
+    <ukg:hasSubField rdf:resource="ukg:SF_Thermodynamics"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_ConstructionManufacturing"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_Mechanics"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_MachineTheory"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_Energy"/>
+  </ukg:department>
+
+  <ukg:department rdf:about="ukg:IE_Dept">
+    <ukg:departmentName>Industrial Engineering</ukg:departmentName>
+    <rdfs:label xml:lang="en">Industrial Engineering Department</rdfs:label>
+    <rdfs:label xml:lang="tr">Endüstri Mühendisliği Bölümü</rdfs:label>
+    <ukg:hasSubField rdf:resource="ukg:SF_OperationsResearch"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_IndustrialEngineering"/>
+    <ukg:hasSubField rdf:resource="ukg:SF_AppliedStatistics"/>
+  </ukg:department>
+
+  <!-- ============================================================ -->
+  <!-- SUB-FIELDS (Anabilim Dalları)                                -->
+  <!-- ============================================================ -->
+
+  <ukg:subField rdf:about="ukg:SF_Software">
+    <ukg:subFieldName>Yazılım Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Yazılım Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_ComputerScience">
+    <ukg:subFieldName>Bilgisayar Bilimleri Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Bilgisayar Bilimleri Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_Hardware">
+    <ukg:subFieldName>Donanım Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Donanım Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_Thermodynamics">
+    <ukg:subFieldName>Termodinamik Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Termodinamik Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_ConstructionManufacturing">
+    <ukg:subFieldName>Konstrüksiyon ve İmalat Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Konstrüksiyon ve İmalat Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_Mechanics">
+    <ukg:subFieldName>Mekanik Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Mekanik Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_MachineTheory">
+    <ukg:subFieldName>Makine Teorisi ve Dinamiği Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Makine Teorisi ve Dinamiği Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_Energy">
+    <ukg:subFieldName>Enerji Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Enerji Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_OperationsResearch">
+    <ukg:subFieldName>Yöneylem Araştırması Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Yöneylem Araştırması Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_IndustrialEngineering">
+    <ukg:subFieldName>Endüstri Mühendisliği Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Endüstri Mühendisliği Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+  <ukg:subField rdf:about="ukg:SF_AppliedStatistics">
+    <ukg:subFieldName>Uygulamalı İstatistik ve Olasılık Anabilim Dalı</ukg:subFieldName>
+    <rdfs:label xml:lang="tr">Uygulamalı İstatistik ve Olasılık Anabilim Dalı</rdfs:label>
+  </ukg:subField>
+
+
+  <ukg:professor rdf:about="ukg:Tugba_Ozacar_Ozturk">
+    <ukg:fullName>Prof. Dr. Tuğba ÖZACAR ÖZTÜRK</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>tugba.ozacar@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/tugba.ozacar</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Bölüm Başkanı, Yazılım Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Software"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Muhammet_Gokhan_Erdem">
+    <ukg:fullName>Prof. Dr. Muhammet Gökhan ERDEM</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>muhammet.cinsdikici@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/muhammet.cinsdikici</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Bilgisayar Bilimleri Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Bora_Canbula">
+    <ukg:fullName>Doç. Dr. Bora CANBULA</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>bora.canbula@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/bora.canbula</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Yazılım Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Software"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Ovunc_Ozturk">
+    <ukg:fullName>Doç. Dr. Övünç ÖZTÜRK</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>ovunc.ozturk@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/ovunc.ozturk</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Bölüm Başkan Yardımcısı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Birim_Balci">
+    <ukg:fullName>Doç. Dr. Birim BALCI</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>birim.balci@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/birim.balci</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Bilgisayar Bilimleri Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Didem_Abidin">
+    <ukg:fullName>Dr. Öğr. Üyesi Didem ABİDİN</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>didem.abidin@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/didem.abidin</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Donanım Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Hardware"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Zeynep_Cipiloglu_Yildiz">
+    <ukg:fullName>Dr. Öğr. Üyesi Zeynep ÇİPİLOĞLU YILDIZ</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>zeynep.cipiloglu@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/zeynep.cipiloglu</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Bölüm Başkan Yardımcısı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Sevcan_Emek">
+    <ukg:fullName>Dr. Öğr. Üyesi Sevcan EMEK</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>sevcan.emek@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/sevcan.emek</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Yazılım Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Software"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Volkan_Altintas">
+    <ukg:fullName>Dr. Öğr. Üyesi Volkan ALTINTAŞ</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>volkan.altintas@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/volkan.altintas</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Donanım Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Hardware"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Gamze_Turkmen">
+    <ukg:fullName>Dr. Öğr. Üyesi Gamze TÜRKMEN</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>gamze.turkmen@cbu.edu.tr</ukg:email>
+    <ukg:avesisURL rdf:datatype="xsd:anyURI">https://avesis.mcbu.edu.tr/gamze.turkmen</ukg:avesisURL>
+    <rdfs:comment xml:lang="tr">Yazılım Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Software"/>
+  </ukg:professor>
+
+  <ukg:researchAssistant rdf:about="ukg:Ahmet_Cahit_Yasa">
+    <ukg:fullName>Arş. Gör. Dr. Ahmet Cahit YAŞA</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>ahmet.yasa@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Software"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Samet_Yilmaz">
+    <ukg:fullName>Arş. Gör. Samet YILMAZ</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>samet.yilmaz@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Software"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Turan_Goktug_Altundogan">
+    <ukg:fullName>Arş. Gör. Dr. Turan Göktuğ ALTUNDOĞAN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>turan.altundogan@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Hardware"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Erkin_Alp_Guney">
+    <ukg:fullName>Arş. Gör. Erkin Alp GÜNEY</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>erkin.guney@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Esat_Fazlullah_Celik">
+    <ukg:fullName>Arş. Gör. Esat Fazlullah ÇELİK</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>esat.celik@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Umut_Dokmen">
+    <ukg:fullName>Arş. Gör. Umut DÖKMEN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>umut.dokmen@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Suleyman_Yigit_Kaygisiz">
+    <ukg:fullName>Arş. Gör. Süleyman Yiğit Kaygısız</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>suleyman.kaygisiz@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ComputerScience"/>
+  </ukg:researchAssistant>
+
+  <ukg:professor rdf:about="ukg:Ali_Yurddas">
+    <ukg:fullName>Prof. Dr. Ali YURDDAŞ</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>ali.yurddas@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Bölüm Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Thermodynamics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Enver_Atik">
+    <ukg:fullName>Prof. Dr. Enver ATİK</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>enver.atik@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Triboloji, Makine Elemanları</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Nursen_Saklakoglu">
+    <ukg:fullName>Prof. Dr. Nurşen SAKLAKOĞLU</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>nursen.saklakoglu@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Malzeme Bilimi, Korozyon</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Hakan_Cetinel">
+    <ukg:fullName>Prof. Dr. Hakan ÇETİNEL</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>hakan.cetinel@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Fatih_Selimefendigil">
+    <ukg:fullName>Prof. Dr. Fatih SELİMEFENDİGİL</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>fatih.selimefendigil@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Termodinamik Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Thermodynamics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Leyla_Ozgener">
+    <ukg:fullName>Prof. Dr. Leyla ÖZGENER</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>leyla.ozgener@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Enerji Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Energy"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Burak_Ozhan">
+    <ukg:fullName>Prof. Dr. B. Burak ÖZHAN</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>burak.ozhan@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Mekanik Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Mechanics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Murat_Bagdatli">
+    <ukg:fullName>Prof. Dr. Süleyman Murat BAĞDATLI</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>murat.bagdatli@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Makine Teorisi ve Dinamiği Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_MachineTheory"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Fatih_Karahan">
+    <ukg:fullName>Doç. Dr. M. M. Fatih KARAHAN</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>fatih.karahan@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Mekanik Titreşimler</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_MachineTheory"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Simge_Irizalp">
+    <ukg:fullName>Doç. Dr. Simge İRİZALP</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>simge.gencalp@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Bölüm Başkan Yardımcısı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Gozde_Sari">
+    <ukg:fullName>Doç. Dr. Gözde SARI</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>gozde.deger@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Mekanik Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Mechanics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Can_Civi">
+    <ukg:fullName>Doç. Dr. Can ÇİVİ</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>can.civi@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Toz Metalurjisi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Farshid_Khosravi">
+    <ukg:fullName>Doç. Dr. Farshid Khosravi</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>farshid.khosravi@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Mekanik Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Mechanics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Yigit_Aksoy">
+    <ukg:fullName>Doç. Dr. Yiğit AKSOY</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>yigit.aksoy@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Termodinamik Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Thermodynamics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Anil_Basaran">
+    <ukg:fullName>Doç. Dr. Anıl BAŞARAN</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>anil.basaran@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Termodinamik Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Thermodynamics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Bahattin_Akgul">
+    <ukg:fullName>Doç. Dr. M. Bahattin AKGÜL</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>mbakgul@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Enerji Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Energy"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Mustafa_Karamolla">
+    <ukg:fullName>Dr. Öğr. Üyesi Mustafa KARAMOLLA</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>mustafa.karamolla@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Teknik Resim, Motorlu Taşıtlar</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Halit_Dogan">
+    <ukg:fullName>Dr. Öğr. Üyesi Halit DOĞAN</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>halit.dogan@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Yüzey Modifikasyonu</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Saim_Kural">
+    <ukg:fullName>Dr. Öğr. Üyesi Saim KURAL</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>saim.kural@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Bölüm Başkan Yardımcısı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_MachineTheory"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Seda_Arabaci">
+    <ukg:fullName>Dr. Öğr. Üyesi Seda ARABACI</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>seda.kirmaci@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Termodinamik Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Thermodynamics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Ugur_Ozmen">
+    <ukg:fullName>Dr. Öğr. Üyesi Uğur ÖZMEN</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>ugur.ozmen@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Mekanik Anabilim Dalı Öğretim Üyesi</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Mechanics"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Ibrahim_Demir">
+    <ukg:fullName>Dr. Öğr. Üyesi İbrahim DEMİR</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>ibrahim.demir@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Makine Teorisi ve Dinamiği</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_MachineTheory"/>
+  </ukg:professor>
+
+  <ukg:researchAssistant rdf:about="ukg:Erdem_Ersayin">
+    <ukg:fullName>Arş. Gör. Dr. Erdem ERSAYIN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>erdem.ersayin@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Energy"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Gulay_Turgutlu">
+    <ukg:fullName>Arş. Gör. Gülay Ahu TURGUTLU</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>ahu.turgutlu@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Energy"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Nail_Aslan">
+    <ukg:fullName>Arş. Gör. Nail ASLAN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>nail.aslan@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Sirri_Polat">
+    <ukg:fullName>Arş. Gör. Sırrı Can POLAT</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>sirri.polat@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_MachineTheory"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Resul_Sonmez">
+    <ukg:fullName>Arş. Gör. Resul SÖNMEZ</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>resul.sonmez@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Aykut_Karakor">
+    <ukg:fullName>Arş. Gör. Aykut KARAKOR</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>aykut.karakor@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Thermodynamics"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Alp_Eren">
+    <ukg:fullName>Arş. Gör. Alp EREN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>alp.eren@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_Mechanics"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Cansu_Apaydin">
+    <ukg:fullName>Pr. Arş. Gör. Cansu APAYDIN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>cansu.apaydin@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_ConstructionManufacturing"/>
+  </ukg:researchAssistant>
+
+  <ukg:professor rdf:about="ukg:Mehmet_Ali_Ilgin">
+    <ukg:fullName>Doç. Dr. Mehmet Ali ILGIN</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>mehmetali.ilgin@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Bölüm Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Pinar_Ozfirat">
+    <ukg:fullName>Prof. Dr. Pınar Mızrak ÖZFIRAT</ukg:fullName>
+    <ukg:title>Prof. Dr.</ukg:title>
+    <ukg:email>pinar.ozfirat@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Emrah_Edis">
+    <ukg:fullName>Doç. Dr. Emrah EDİS</ukg:fullName>
+    <ukg:title>Doç. Dr.</ukg:title>
+    <ukg:email>emrah.edis@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Yöneylem Araştırması Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_OperationsResearch"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Hulya_Gucdemir">
+    <ukg:fullName>Dr. Öğr. Üyesi Hülya GÜÇDEMİR</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>hulya.gucdemir@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Bölüm Başkan Yardımcısı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_OperationsResearch"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Ozgur_Eski">
+    <ukg:fullName>Dr. Öğr. Üyesi Özgür ESKİ</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>ozgur.eski@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Yöneylem Araştırması</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_OperationsResearch"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Emre_Senol">
+    <ukg:fullName>Dr. Öğr. Üyesi M. Emre ŞENOL</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>emre.senol@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Bölüm Başkan Yardımcısı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_OperationsResearch"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Ozlem_Uzun_Araz">
+    <ukg:fullName>Dr. Öğr. Üyesi Özlem UZUN ARAZ</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>ozlem.araz@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Endüstri Mühendisliği</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Rahime_Sancar_Edis">
+    <ukg:fullName>Dr. Öğr. Üyesi Rahime SANCAR EDİS</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>rahime.edis@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Endüstri Mühendisliği</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Murat_Sahin">
+    <ukg:fullName>Dr. Öğr. Üyesi Murat ŞAHİN</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>sahin.murat@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Endüstri Mühendisliği</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:professor>
+
+  <ukg:professor rdf:about="ukg:Gokcecicek_Tasoglu">
+    <ukg:fullName>Dr. Öğr. Üyesi Gökçeçicek TAŞOĞLU</ukg:fullName>
+    <ukg:title>Dr. Öğr. Üyesi</ukg:title>
+    <ukg:email>gokcecicek.tuna@cbu.edu.tr</ukg:email>
+    <rdfs:comment xml:lang="tr">Uygulamalı İstatistik Anabilim Dalı Başkanı</rdfs:comment>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_AppliedStatistics"/>
+  </ukg:professor>
+
+  <ukg:researchAssistant rdf:about="ukg:Gizem_Kayran">
+    <ukg:fullName>Arş. Gör. Gizem KAYRAN</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>gizem.kucuker@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_OperationsResearch"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Aykan_Akincilar">
+    <ukg:fullName>Arş. Gör. Dr. Aykan AKINCILAR</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>aykan.akincilar@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Elif_Guler">
+    <ukg:fullName>Arş. Gör. Elif GÜLER</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>guler.elif@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Ozge_Satir">
+    <ukg:fullName>Arş. Gör. Özge ŞATIR AKPUNAR</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>ozge.satir@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_IndustrialEngineering"/>
+  </ukg:researchAssistant>
+
+  <ukg:researchAssistant rdf:about="ukg:Didem_Ari">
+    <ukg:fullName>Arş. Gör. Didem ARI</ukg:fullName>
+    <ukg:title>Araştırma Görevlisi</ukg:title>
+    <ukg:email>didem.ari@cbu.edu.tr</ukg:email>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:worksIn rdf:resource="ukg:SF_AppliedStatistics"/>
+  </ukg:researchAssistant>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE1131">
+    <ukg:courseCode>CSE1131</ukg:courseCode>
+    <ukg:courseName>Molecular Biology for Computer Scientists</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE1133">
+    <ukg:courseCode>CSE1133</ukg:courseCode>
+    <ukg:courseName>Introduction to Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE1141">
+    <ukg:courseCode>CSE1141</ukg:courseCode>
+    <ukg:courseName>Introduction to Computer Engineering</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE1143">
+    <ukg:courseCode>CSE1143</ukg:courseCode>
+    <ukg:courseName>Introduction to Computer Engineering and Career Planning</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:ENG1135">
+    <ukg:courseCode>ENG1135</ukg:courseCode>
+    <ukg:courseName>Professional English I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MTH1305">
+    <ukg:courseCode>MTH1305</ukg:courseCode>
+    <ukg:courseName>Mathematics I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:PHY1307">
+    <ukg:courseCode>PHY1307</ukg:courseCode>
+    <ukg:courseName>Physics I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE1120">
+    <ukg:courseCode>CSE1120</ukg:courseCode>
+    <ukg:courseName>Discrete Structures</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE1124">
+    <ukg:courseCode>CSE1124</ukg:courseCode>
+    <ukg:courseName>Object Oriented Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MTH1306">
+    <ukg:courseCode>MTH1306</ukg:courseCode>
+    <ukg:courseName>Mathematics II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:PHY1308">
+    <ukg:courseCode>PHY1308</ukg:courseCode>
+    <ukg:courseName>Physics II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE2101">
+    <ukg:courseCode>CSE2101</ukg:courseCode>
+    <ukg:courseName>Electrical Circuits and Electronics</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE2105">
+    <ukg:courseCode>CSE2105</ukg:courseCode>
+    <ukg:courseName>Data Structures</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE2113">
+    <ukg:courseCode>CSE2113</ukg:courseCode>
+    <ukg:courseName>Formal Languages and Abstract Machines</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MTH2303">
+    <ukg:courseCode>MTH2303</ukg:courseCode>
+    <ukg:courseName>Differential Equations</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE2118">
+    <ukg:courseCode>CSE2118</ukg:courseCode>
+    <ukg:courseName>Programming Languages</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE2122">
+    <ukg:courseCode>CSE2122</ukg:courseCode>
+    <ukg:courseName>Design and Analysis of Algorithms</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE2136">
+    <ukg:courseCode>CSE2136</ukg:courseCode>
+    <ukg:courseName>Logic Design</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:ENG3120">
+    <ukg:courseCode>ENG3120</ukg:courseCode>
+    <ukg:courseName>Statistics</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE3131">
+    <ukg:courseCode>CSE3131</ukg:courseCode>
+    <ukg:courseName>Computer Organization</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE3137">
+    <ukg:courseCode>CSE3137</ukg:courseCode>
+    <ukg:courseName>Object Oriented Analysis and Design</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE3139">
+    <ukg:courseCode>CSE3139</ukg:courseCode>
+    <ukg:courseName>Database Management Systems</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE3134">
+    <ukg:courseCode>CSE3134</ukg:courseCode>
+    <ukg:courseName>Microprocessor and Embedded Systems</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE3136">
+    <ukg:courseCode>CSE3136</ukg:courseCode>
+    <ukg:courseName>Computer Networks</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CBU4405">
+    <ukg:courseCode>CBU4405</ukg:courseCode>
+    <ukg:courseName>Job Safety and Workers Health I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE4123">
+    <ukg:courseCode>CSE4123</ukg:courseCode>
+    <ukg:courseName>Software Engineering</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE4127">
+    <ukg:courseCode>CSE4127</ukg:courseCode>
+    <ukg:courseName>Graduation Project I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CBU4406">
+    <ukg:courseCode>CBU4406</ukg:courseCode>
+    <ukg:courseName>Job Safety and Workers Health II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE4124">
+    <ukg:courseCode>CSE4124</ukg:courseCode>
+    <ukg:courseName>Vocational Training in Workplace</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">8</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CSE4130">
+    <ukg:courseCode>CSE4130</ukg:courseCode>
+    <ukg:courseName>Graduation Project II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">8</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3207">
+    <ukg:courseCode>CSE3207</ukg:courseCode>
+    <ukg:courseName>.Net Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3209">
+    <ukg:courseCode>CSE3209</ukg:courseCode>
+    <ukg:courseName>.Net Web Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3211">
+    <ukg:courseCode>CSE3211</ukg:courseCode>
+    <ukg:courseName>Advanced Computer Networks</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3213">
+    <ukg:courseCode>CSE3213</ukg:courseCode>
+    <ukg:courseName>Artificial Intelligence</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3214">
+    <ukg:courseCode>CSE3214</ukg:courseCode>
+    <ukg:courseName>Introduction to Digital Image Processing</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3216">
+    <ukg:courseCode>CSE3216</ukg:courseCode>
+    <ukg:courseName>Simulation and Modelling</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3217">
+    <ukg:courseCode>CSE3217</ukg:courseCode>
+    <ukg:courseName>Automata Theory</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3218">
+    <ukg:courseCode>CSE3218</ukg:courseCode>
+    <ukg:courseName>Prolog Programming and Expert Systems</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3219">
+    <ukg:courseCode>CSE3219</ukg:courseCode>
+    <ukg:courseName>Computer Graphics</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3220">
+    <ukg:courseCode>CSE3220</ukg:courseCode>
+    <ukg:courseName>Machine Learning</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3221">
+    <ukg:courseCode>CSE3221</ukg:courseCode>
+    <ukg:courseName>Distributed Systems and Algorithms</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3222">
+    <ukg:courseCode>CSE3222</ukg:courseCode>
+    <ukg:courseName>Data Mining</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3223">
+    <ukg:courseCode>CSE3223</ukg:courseCode>
+    <ukg:courseName>Web Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3225">
+    <ukg:courseCode>CSE3225</ukg:courseCode>
+    <ukg:courseName>Mobile Computing with iOS and Android</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3226">
+    <ukg:courseCode>CSE3226</ukg:courseCode>
+    <ukg:courseName>Knowledge Engineering and Ontologies</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3228">
+    <ukg:courseCode>CSE3228</ukg:courseCode>
+    <ukg:courseName>Artificial Neural Networks</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3229">
+    <ukg:courseCode>CSE3229</ukg:courseCode>
+    <ukg:courseName>Introduction to Robotics</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3230">
+    <ukg:courseCode>CSE3230</ukg:courseCode>
+    <ukg:courseName>Compiler Design</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3231">
+    <ukg:courseCode>CSE3231</ukg:courseCode>
+    <ukg:courseName>System Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3232">
+    <ukg:courseCode>CSE3232</ukg:courseCode>
+    <ukg:courseName>Semantic Web Technologies</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3233">
+    <ukg:courseCode>CSE3233</ukg:courseCode>
+    <ukg:courseName>Computer Network Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3234">
+    <ukg:courseCode>CSE3234</ukg:courseCode>
+    <ukg:courseName>Game Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3236">
+    <ukg:courseCode>CSE3236</ukg:courseCode>
+    <ukg:courseName>Human-Computer Interaction Design</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3238">
+    <ukg:courseCode>CSE3238</ukg:courseCode>
+    <ukg:courseName>Software Testing</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3240">
+    <ukg:courseCode>CSE3240</ukg:courseCode>
+    <ukg:courseName>Network Security</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3242">
+    <ukg:courseCode>CSE3242</ukg:courseCode>
+    <ukg:courseName>Advanced Database Management Systems</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3246">
+    <ukg:courseCode>CSE3246</ukg:courseCode>
+    <ukg:courseName>Cyber Security</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3248">
+    <ukg:courseCode>CSE3248</ukg:courseCode>
+    <ukg:courseName>Cloud Computing</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3250">
+    <ukg:courseCode>CSE3250</ukg:courseCode>
+    <ukg:courseName>Data Visualization</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3252">
+    <ukg:courseCode>CSE3252</ukg:courseCode>
+    <ukg:courseName>Natural Language Processing</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:CSE3254">
+    <ukg:courseCode>CSE3254</ukg:courseCode>
+    <ukg:courseName>Microservices Architecture</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:CSE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MEE1109">
+    <ukg:courseCode>MEE1109</ukg:courseCode>
+    <ukg:courseName>Introduction to Mechanical Engineering</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MTH1305_MEE">
+    <ukg:courseCode>MTH1305_MEE</ukg:courseCode>
+    <ukg:courseName>Mathematics I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:PHY1307_MEE">
+    <ukg:courseCode>PHY1307_MEE</ukg:courseCode>
+    <ukg:courseName>Physics I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MHN1101">
+    <ukg:courseCode>MHN1101</ukg:courseCode>
+    <ukg:courseName>Teknik Resim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK1106">
+    <ukg:courseCode>MAK1106</ukg:courseCode>
+    <ukg:courseName>Bilgisayar Destekli Teknik Resim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK1112">
+    <ukg:courseCode>MAK1112</ukg:courseCode>
+    <ukg:courseName>Statik</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MTH1306_MEE">
+    <ukg:courseCode>MTH1306_MEE</ukg:courseCode>
+    <ukg:courseName>Mathematics II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:PHY1306_MEE">
+    <ukg:courseCode>PHY1306_MEE</ukg:courseCode>
+    <ukg:courseName>Physics II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2119">
+    <ukg:courseCode>MAK2119</ukg:courseCode>
+    <ukg:courseName>Mukavemet I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2113">
+    <ukg:courseCode>MAK2113</ukg:courseCode>
+    <ukg:courseName>Termodinamik I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2127">
+    <ukg:courseCode>MAK2127</ukg:courseCode>
+    <ukg:courseName>Elektrik-Elektronik Mühendisliği Temelleri</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MTH2303_MEE">
+    <ukg:courseCode>MTH2303_MEE</ukg:courseCode>
+    <ukg:courseName>Differential Equations</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2114">
+    <ukg:courseCode>MAK2114</ukg:courseCode>
+    <ukg:courseName>Termodinamik II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2120">
+    <ukg:courseCode>MAK2120</ukg:courseCode>
+    <ukg:courseName>Mukavemet II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2124">
+    <ukg:courseCode>MAK2124</ukg:courseCode>
+    <ukg:courseName>Üretim Yöntemleri</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK2132">
+    <ukg:courseCode>MAK2132</ukg:courseCode>
+    <ukg:courseName>Dinamik</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3131">
+    <ukg:courseCode>MAK3131</ukg:courseCode>
+    <ukg:courseName>Sistem Analizi ve Kontrol</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3151">
+    <ukg:courseCode>MAK3151</ukg:courseCode>
+    <ukg:courseName>Akışkanlar Mekaniği</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3127">
+    <ukg:courseCode>MAK3127</ukg:courseCode>
+    <ukg:courseName>Isı Transferi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3119">
+    <ukg:courseCode>MAK3119</ukg:courseCode>
+    <ukg:courseName>Makine Elemanları I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3174">
+    <ukg:courseCode>MAK3174</ukg:courseCode>
+    <ukg:courseName>Makine Mühendisliğinde Bilgisayar Uygulamaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3120">
+    <ukg:courseCode>MAK3120</ukg:courseCode>
+    <ukg:courseName>Makine Elemanları II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK3104">
+    <ukg:courseCode>MAK3104</ukg:courseCode>
+    <ukg:courseName>Makine Dinamiği</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CBU4403_MEE">
+    <ukg:courseCode>CBU4403_MEE</ukg:courseCode>
+    <ukg:courseName>İş Sağlığı ve Güvenliği I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK4121">
+    <ukg:courseCode>MAK4121</ukg:courseCode>
+    <ukg:courseName>Mekanik Tasarım Projesi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK4123">
+    <ukg:courseCode>MAK4123</ukg:courseCode>
+    <ukg:courseName>Isıl Tasarım Projesi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CBU4404_MEE">
+    <ukg:courseCode>CBU4404_MEE</ukg:courseCode>
+    <ukg:courseName>İş Sağlığı ve Güvenliği II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK4110">
+    <ukg:courseCode>MAK4110</ukg:courseCode>
+    <ukg:courseName>Makine Mühendisliği Uygulamaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">8</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAK4150">
+    <ukg:courseCode>MAK4150</ukg:courseCode>
+    <ukg:courseName>İşletmede Mesleki Eğitim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">8</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4503">
+    <ukg:courseCode>MAK4503</ukg:courseCode>
+    <ukg:courseName>Bina ve Yangın Tesisatı</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4517">
+    <ukg:courseCode>MAK4517</ukg:courseCode>
+    <ukg:courseName>Hidrolik Makineler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4519">
+    <ukg:courseCode>MAK4519</ukg:courseCode>
+    <ukg:courseName>Hidrolik ve Pnömatik Devreler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4522">
+    <ukg:courseCode>MAK4522</ukg:courseCode>
+    <ukg:courseName>Traktör ve Tarım Makineleri</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4526">
+    <ukg:courseCode>MAK4526</ukg:courseCode>
+    <ukg:courseName>Transport Tekniği</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4532">
+    <ukg:courseCode>MAK4532</ukg:courseCode>
+    <ukg:courseName>Kaldırma Makinaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4533">
+    <ukg:courseCode>MAK4533</ukg:courseCode>
+    <ukg:courseName>Kalite Kontrol ve Standardizasyon</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4535">
+    <ukg:courseCode>MAK4535</ukg:courseCode>
+    <ukg:courseName>Kaynak Teknolojisi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4536">
+    <ukg:courseCode>MAK4536</ukg:courseCode>
+    <ukg:courseName>Kırılma Mekaniğine Giriş</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4542">
+    <ukg:courseCode>MAK4542</ukg:courseCode>
+    <ukg:courseName>Mekatronik</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4544">
+    <ukg:courseCode>MAK4544</ukg:courseCode>
+    <ukg:courseName>Üretim Planlama</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4545">
+    <ukg:courseCode>MAK4545</ukg:courseCode>
+    <ukg:courseName>Mekanik Titreşimler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4549">
+    <ukg:courseCode>MAK4549</ukg:courseCode>
+    <ukg:courseName>Motorlar</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4551">
+    <ukg:courseCode>MAK4551</ukg:courseCode>
+    <ukg:courseName>Motorlu Taşıtlar</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4558">
+    <ukg:courseCode>MAK4558</ukg:courseCode>
+    <ukg:courseName>Optimizasyon</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4560">
+    <ukg:courseCode>MAK4560</ukg:courseCode>
+    <ukg:courseName>Plastik Malzemeler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4563">
+    <ukg:courseCode>MAK4563</ukg:courseCode>
+    <ukg:courseName>Seramik Malzemeler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4567">
+    <ukg:courseCode>MAK4567</ukg:courseCode>
+    <ukg:courseName>Sonlu Elemanlara Giriş</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:MAK4570">
+    <ukg:courseCode>MAK4570</ukg:courseCode>
+    <ukg:courseName>Tahribatsız Muayene</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:MEE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:FIZ1307_IE">
+    <ukg:courseCode>FIZ1307_IE</ukg:courseCode>
+    <ukg:courseName>Fizik I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAT1305_IE">
+    <ukg:courseCode>MAT1305_IE</ukg:courseCode>
+    <ukg:courseName>Matematik I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MHN1100">
+    <ukg:courseCode>MHN1100</ukg:courseCode>
+    <ukg:courseName>Bilgisayar Destekli Teknik Resim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">1</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END1106">
+    <ukg:courseCode>END1106</ukg:courseCode>
+    <ukg:courseName>Endüstri Mühendisliğine Giriş</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END1132">
+    <ukg:courseCode>END1132</ukg:courseCode>
+    <ukg:courseName>Üretim Yöntemleri</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END1134">
+    <ukg:courseCode>END1134</ukg:courseCode>
+    <ukg:courseName>Ekonominin Temelleri</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAT1306_IE">
+    <ukg:courseCode>MAT1306_IE</ukg:courseCode>
+    <ukg:courseName>Matematik II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">2</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND2105">
+    <ukg:courseCode>IND2105</ukg:courseCode>
+    <ukg:courseName>Operations Research I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND2107">
+    <ukg:courseCode>IND2107</ukg:courseCode>
+    <ukg:courseName>Advanced Computer Programming</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND2113">
+    <ukg:courseCode>IND2113</ukg:courseCode>
+    <ukg:courseName>Probability Theory and Introduction to Statistics</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:MAT2303_IE">
+    <ukg:courseCode>MAT2303_IE</ukg:courseCode>
+    <ukg:courseName>Diferansiyel Denklemler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">3</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END2124">
+    <ukg:courseCode>END2124</ukg:courseCode>
+    <ukg:courseName>Uygulamalı Mühendislik Ekonomisi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END2126">
+    <ukg:courseCode>END2126</ukg:courseCode>
+    <ukg:courseName>Mühendisler İçin Yönetim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END2138">
+    <ukg:courseCode>END2138</ukg:courseCode>
+    <ukg:courseName>Maliyet Analizi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND2114">
+    <ukg:courseCode>IND2114</ukg:courseCode>
+    <ukg:courseName>Statistics For Engineers</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND2118">
+    <ukg:courseCode>IND2118</ukg:courseCode>
+    <ukg:courseName>Operations Research II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">4</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END3111">
+    <ukg:courseCode>END3111</ukg:courseCode>
+    <ukg:courseName>Üretim Stajı</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END3127">
+    <ukg:courseCode>END3127</ukg:courseCode>
+    <ukg:courseName>Sistem Analizi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END3177">
+    <ukg:courseCode>END3177</ukg:courseCode>
+    <ukg:courseName>Kalite Planlama ve Kontrol</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3101">
+    <ukg:courseCode>IND3101</ukg:courseCode>
+    <ukg:courseName>Operations Research III</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3113">
+    <ukg:courseCode>IND3113</ukg:courseCode>
+    <ukg:courseName>Production and Service Systems Management I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3115">
+    <ukg:courseCode>IND3115</ukg:courseCode>
+    <ukg:courseName>Work Study and Analysis</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:CBU4403_IE">
+    <ukg:courseCode>CBU4403_IE</ukg:courseCode>
+    <ukg:courseName>İş Sağlığı ve Güvenliği I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3102">
+    <ukg:courseCode>IND3102</ukg:courseCode>
+    <ukg:courseName>Project Management</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3104">
+    <ukg:courseCode>IND3104</ukg:courseCode>
+    <ukg:courseName>Production and Service Systems Management II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3112">
+    <ukg:courseCode>IND3112</ukg:courseCode>
+    <ukg:courseName>Modeling and Simulation</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND3116">
+    <ukg:courseCode>IND3116</ukg:courseCode>
+    <ukg:courseName>Facilities Design and Planning</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">6</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END4107">
+    <ukg:courseCode>END4107</ukg:courseCode>
+    <ukg:courseName>Seminer</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END4121">
+    <ukg:courseCode>END4121</ukg:courseCode>
+    <ukg:courseName>Endüstriyel Sistem Tasarımı I</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND4113">
+    <ukg:courseCode>IND4113</ukg:courseCode>
+    <ukg:courseName>Computer Integrated Manufacturing and Automation</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:IND4133">
+    <ukg:courseCode>IND4133</ukg:courseCode>
+    <ukg:courseName>Supply Chain Management</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">7</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END4114">
+    <ukg:courseCode>END4114</ukg:courseCode>
+    <ukg:courseName>Endüstri Sistemleri Tasarımı II</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">8</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:mandatoryCourse rdf:about="ukg:END4116">
+    <ukg:courseCode>END4116</ukg:courseCode>
+    <ukg:courseName>İşletmede Mesleki Eğitim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">8</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Spring"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:mandatoryCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4242">
+    <ukg:courseCode>END4242</ukg:courseCode>
+    <ukg:courseName>Bulanık Mantık ve Endüstri Uygulamaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4244">
+    <ukg:courseCode>END4244</ukg:courseCode>
+    <ukg:courseName>Yapay Sinir Ağları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4248">
+    <ukg:courseCode>END4248</ukg:courseCode>
+    <ukg:courseName>Kesikli Optimizasyon Modelleri ve Algoritmaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4250">
+    <ukg:courseCode>END4250</ukg:courseCode>
+    <ukg:courseName>Stratejik Yönetim</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4251">
+    <ukg:courseCode>END4251</ukg:courseCode>
+    <ukg:courseName>Uzman Sistemler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4256">
+    <ukg:courseCode>END4256</ukg:courseCode>
+    <ukg:courseName>Çok Kriterli Karar Verme</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4257">
+    <ukg:courseCode>END4257</ukg:courseCode>
+    <ukg:courseName>Envanter Yönetimi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4259">
+    <ukg:courseCode>END4259</ukg:courseCode>
+    <ukg:courseName>İnsan Kaynakları Yönetimi</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4260">
+    <ukg:courseCode>END4260</ukg:courseCode>
+    <ukg:courseName>Matematiksel Programlama</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4262">
+    <ukg:courseCode>END4262</ukg:courseCode>
+    <ukg:courseName>Modern Sezgisel Yöntemler</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4267">
+    <ukg:courseCode>END4267</ukg:courseCode>
+    <ukg:courseName>Deney Tasarımı</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4268">
+    <ukg:courseCode>END4268</ukg:courseCode>
+    <ukg:courseName>İleri Simülasyon Uygulamaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4269">
+    <ukg:courseCode>END4269</ukg:courseCode>
+    <ukg:courseName>6 Sigma</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <ukg:electiveCourse rdf:about="ukg:END4271">
+    <ukg:courseCode>END4271</ukg:courseCode>
+    <ukg:courseName>Endüstriyel Robot Uygulamaları</ukg:courseName>
+    <ukg:semester rdf:datatype="xsd:integer">5</ukg:semester>
+    <ukg:offeredIn rdf:resource="ukg:Fall"/>
+    <ukg:hasCourse rdf:resource="ukg:IE_Dept"/>
+  </ukg:electiveCourse>
+
+  <!-- PREREQUISITE RELATIONS -->
+
+  <rdf:Description rdf:about="ukg:CSE2105">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE1133"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE2113">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE1120"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE2122">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE2105"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE2118">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE1133"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3131">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE2136"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3139">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE2105"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3137">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE2118"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3136_CN">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE2101"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE4123">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE3137"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3226">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE3217"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3232">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE3226"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3242">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE3139"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3213">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE2122"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3220">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE3213"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:CSE3228">
+    <ukg:hasPrerequisite rdf:resource="ukg:CSE3213"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:IND2118">
+    <ukg:hasPrerequisite rdf:resource="ukg:IND2105"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:IND3101">
+    <ukg:hasPrerequisite rdf:resource="ukg:IND2118"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:MAK2119">
+    <ukg:hasPrerequisite rdf:resource="ukg:MAK1112"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:MAK2120">
+    <ukg:hasPrerequisite rdf:resource="ukg:MAK2119"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:MAK2114">
+    <ukg:hasPrerequisite rdf:resource="ukg:MAK2113"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:MAK3151">
+    <ukg:hasPrerequisite rdf:resource="ukg:MAK2132"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:MAK3131">
+    <ukg:hasPrerequisite rdf:resource="ukg:MAK2132"/>
+  </rdf:Description>
+
+  <!-- SAMPLE STUDENTS -->
+
+  <ukg:student rdf:about="ukg:Ayca_Keskin">
+    <ukg:fullName>Ayca_Keskin</ukg:fullName>
+    <ukg:studentID>20210001</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">3.45</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3226"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3217"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3131"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Efe_Sarigul">
+    <ukg:fullName>Efe_Sarıgül</ukg:fullName>
+    <ukg:studentID>20210002</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">3.10</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3226"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3139"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE2122"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Sinem">
+    <ukg:fullName>Sinem</ukg:fullName>
+    <ukg:studentID>20210003</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">2.90</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK2119"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK2113"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Ozgur">
+    <ukg:fullName>Özgür</ukg:fullName>
+    <ukg:studentID>20210004</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">3.20</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK3151"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK2132"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Zeynep_Demir">
+    <ukg:fullName>Zeynep Demir</ukg:fullName>
+    <ukg:studentID>20220010</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">3.75</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:CSE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3213"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3232"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:CSE3226"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Ali_Yilmaz">
+    <ukg:fullName>Ali Yılmaz</ukg:fullName>
+    <ukg:studentID>20220011</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">2.80</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:IND3101"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:IND2118"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:END4267"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Mert_Kaya">
+    <ukg:fullName>Mert Kaya</ukg:fullName>
+    <ukg:studentID>20220012</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">3.50</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:IE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:IND3112"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:IND3113"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:END4242"/>
+  </ukg:student>
+
+  <ukg:student rdf:about="ukg:Buse_Aksoy">
+    <ukg:fullName>Buse Aksoy</ukg:fullName>
+    <ukg:studentID>20220013</ukg:studentID>
+    <ukg:GPA rdf:datatype="xsd:float">3.90</ukg:GPA>
+    <ukg:belongsTo rdf:resource="ukg:MEE_Dept"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK3127"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK3119"/>
+    <ukg:isEnrolledIn rdf:resource="ukg:MAK3151"/>
+  </ukg:student>
+
+  <!-- TEACHING ASSIGNMENTS -->
+
+  <rdf:Description rdf:about="ukg:Gamze_Turkmen">
+    <ukg:teaches rdf:resource="ukg:CSE3226"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Gamze_Turkmen">
+    <ukg:teaches rdf:resource="ukg:CSE3232"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Gamze_Turkmen">
+    <ukg:teaches rdf:resource="ukg:CSE3217"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Bora_Canbula">
+    <ukg:teaches rdf:resource="ukg:CSE3234"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Bora_Canbula">
+    <ukg:teaches rdf:resource="ukg:CSE3223"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Bora_Canbula">
+    <ukg:teaches rdf:resource="ukg:CSE3248"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Ovunc_Ozturk">
+    <ukg:teaches rdf:resource="ukg:CSE2122"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Ovunc_Ozturk">
+    <ukg:teaches rdf:resource="ukg:CSE3213"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Ovunc_Ozturk">
+    <ukg:teaches rdf:resource="ukg:CSE3220"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Birim_Balci">
+    <ukg:teaches rdf:resource="ukg:CSE3221"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Birim_Balci">
+    <ukg:teaches rdf:resource="ukg:CSE3222"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Birim_Balci">
+    <ukg:teaches rdf:resource="ukg:CSE3252"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Sevcan_Emek">
+    <ukg:teaches rdf:resource="ukg:CSE3137"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Sevcan_Emek">
+    <ukg:teaches rdf:resource="ukg:CSE3238"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Sevcan_Emek">
+    <ukg:teaches rdf:resource="ukg:CSE4123"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Zeynep_Cipiloglu_Yildiz">
+    <ukg:teaches rdf:resource="ukg:CSE3139"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Zeynep_Cipiloglu_Yildiz">
+    <ukg:teaches rdf:resource="ukg:CSE3242"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Didem_Abidin">
+    <ukg:teaches rdf:resource="ukg:CSE2101"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Didem_Abidin">
+    <ukg:teaches rdf:resource="ukg:CSE3134"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Volkan_Altintas">
+    <ukg:teaches rdf:resource="ukg:CSE3131"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Volkan_Altintas">
+    <ukg:teaches rdf:resource="ukg:CSE2136"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Tugba_Ozacar_Ozturk">
+    <ukg:teaches rdf:resource="ukg:CSE3207"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Tugba_Ozacar_Ozturk">
+    <ukg:teaches rdf:resource="ukg:CSE3209"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Muhammet_Gokhan_Erdem">
+    <ukg:teaches rdf:resource="ukg:CSE2113"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Muhammet_Gokhan_Erdem">
+    <ukg:teaches rdf:resource="ukg:CSE3230"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Fatih_Selimefendigil">
+    <ukg:teaches rdf:resource="ukg:MAK2113"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Fatih_Selimefendigil">
+    <ukg:teaches rdf:resource="ukg:MAK2114"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Fatih_Selimefendigil">
+    <ukg:teaches rdf:resource="ukg:MAK3127"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Leyla_Ozgener">
+    <ukg:teaches rdf:resource="ukg:MAK3151"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Burak_Ozhan">
+    <ukg:teaches rdf:resource="ukg:MAK2119"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Burak_Ozhan">
+    <ukg:teaches rdf:resource="ukg:MAK2120"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Murat_Bagdatli">
+    <ukg:teaches rdf:resource="ukg:MAK3131"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Murat_Bagdatli">
+    <ukg:teaches rdf:resource="ukg:MAK2132"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Emrah_Edis">
+    <ukg:teaches rdf:resource="ukg:IND2105"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Emrah_Edis">
+    <ukg:teaches rdf:resource="ukg:IND2118"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Emrah_Edis">
+    <ukg:teaches rdf:resource="ukg:IND3101"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Pinar_Ozfirat">
+    <ukg:teaches rdf:resource="ukg:END3177"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Pinar_Ozfirat">
+    <ukg:teaches rdf:resource="ukg:END4107"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Gokcecicek_Tasoglu">
+    <ukg:teaches rdf:resource="ukg:IND2113"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Gokcecicek_Tasoglu">
+    <ukg:teaches rdf:resource="ukg:IND2114"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Hulya_Gucdemir">
+    <ukg:teaches rdf:resource="ukg:IND3112"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Hulya_Gucdemir">
+    <ukg:teaches rdf:resource="ukg:END4267"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Murat_Sahin">
+    <ukg:teaches rdf:resource="ukg:END4242"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Murat_Sahin">
+    <ukg:teaches rdf:resource="ukg:END4244"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="ukg:Murat_Sahin">
+    <ukg:teaches rdf:resource="ukg:END4262"/>
+  </rdf:Description>
+
+</rdf:RDF>
+<!-- Generated by University Knowledge Graph build script - v2.0 -->
+<!-- MCBU Faculty of Engineering: CSE, MEE, IE departments -->
