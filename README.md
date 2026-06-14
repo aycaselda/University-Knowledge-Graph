@@ -1,30 +1,97 @@
-# Ontology Requirements Specification Document (v2)
+# 🏛️ University Knowledge Graph System
 
-### Changelog: What has changed compared to Version 1 (v1)?
-
-* **Expanded Class Hierarchy:** The `Course` class was branched into `MandatoryCourse` and `ElectiveCourse`. The `Person` class was expanded to include `AcademicStaff`, which is further divided into `Professor` and `ResearchAssistant`. The `SubField` class was introduced to model academic sub-departments.
-* **New Object Properties:** Added `worksIn` (linking staff to sub-fields), `hasSubField` (linking departments to sub-fields), `hasCourse`, `offeredIn`, and `supervises`.
-* **New Data Properties:** Added `courseCode`, `courseName`, `semester`, `fullName`, `title`, `email`, `avesisURL`, `studentID`, `GPA`, `departmentName`, and `subFieldName` to hold real-world data.
-* **Disjointness Constraints:** Implemented strict disjoint rules between `Professor`, `ResearchAssistant`, and `Student`; as well as between `MandatoryCourse` and `ElectiveCourse`.
-* **Data Source Shift:** Transitioned from dummy data to real-world academic data extracted from the Manisa Celal Bayar University (MCBU) Bologna Information System and AVESİS portal, utilizing LLMs for unstructured text parsing.
+This repository contains the complete implementation of the **University Knowledge Graph** project developed for the *Knowledge Engineering and Ontologies* course.The project structurally models, validates, and queries the academic ecosystem of the **Manisa Celal Bayar University (MCBU) Engineering Faculty**, focusing on the Computer, Industrial, and Mechanical Engineering departments.
 
 ---
 
-### ORSD Table
+## 🎯 Project Objective
 
-| Ref | Section | Content |
-| :--- | :--- | :--- |
-| **1** | **Purpose** | To formalize the semantic relationships within the Manisa Celal Bayar University (MCBU) Faculty of Engineering ecosystem, specifically modeling student enrollments, faculty-subfield assignments, and complex mandatory/elective course prerequisite structures to enable automated academic reasoning. |
-| **2** | **Scope** | The ontology covers the MCBU Engineering Faculty (CSE, MEE, and IE departments), their academic sub-fields, academic staff (Professors and Research Assistants), students, academic terms, and course hierarchies. It excludes administrative staff, campus facilities, and financial systems. |
-| **3** | **Implementation Language** | OWL 2 (Web Ontology Language) / RDF, developed using Protégé. METHONTOLOGY framework applied. |
-| **4** | **Intended End-Users** | University Students, Academic Advisors, and Department Heads. |
-| **5** | **Intended Uses** | Automated prerequisite validation, curriculum workload analysis, course recommendation systems, and serving as a structured knowledge base for future machine-learning-based risk analysis models. |
-| **6** | **Ontology Requirements** | |
-| | **a. Non-Functional Requirements** | - Must be developed using W3C Semantic Web standards (OWL).<br>- Must support automated reasoning (e.g., using HermiT) without logical conflicts.<br>- Must enforce disjointness among distinct academic roles to ensure data integrity.<br>- Must scale to accommodate new faculties. |
-| | **b. Functional Requirements (CQs)** | **CQ1:** What are the mandatory courses offered in the 5th semester of the CSE department?<br>**CQ2:** What are the prerequisites for the "Automata Theory" course?<br>**CQ3:** In which sub-field does a specific Professor work, and which courses do they teach?<br>**CQ4:** Who are the Research Assistants working in the Operations Research sub-field?<br>**CQ5:** Which courses is a specific Student currently enrolled in? |
-| **7** | **Pre-Glossary of Terms** | |
-| | **a. Terms from CQs** | Mandatory Course, Semester, Department, Prerequisite, Sub-field, Professor, Research Assistant, Enrolled, Teach. |
-| | **b. Terms from Answers** | `hasPrerequisite`, `belongsTo`, `worksIn`, `hasSubField`, `teaches`, `isEnrolledIn`, `hasCourse`, `offeredIn` (Object Properties). |
-| | **c. Objects** | `Student`, `Professor`, `ResearchAssistant`, `MandatoryCourse`, `ElectiveCourse`, `Department`, `SubField`, `AcademicTerm` (Core Classes). |
+The primary objective of this project is to resolve the challenge of fragmented and siloed academic data across university faculties. By designing a unified Semantic Web application, this system:
+* **Formalizes the Domain:** Captures complex relationships between students, academic staff (professors and research assistants), courses (mandatory and elective), and academic sub-fields using an OWL 2 ontology.
+* **Ensures Data Integrity:** Employs SHACL shapes to validate essential business constraints, such as mandatory student IDs and departmental affiliations.
+* **Enables Intelligent Querying:** Leverages SPARQL for logical reasoning and automated deduction (e.g., transitive prerequisite chains).
+* **Integrates Large Language Models (LLMs):** Bridges the gap between natural language and structured query logic by translating user questions into ontology-grounded SPARQL queries using the Claude API, drastically minimizing AI hallucinations.
+
+---
+
+## 📊 Dataset Sources
+
+]Rather than relying on static or synthetic datasets, real-time data extraction was implemented to reflect the authentic academic ecosystem of the faculty:
+1. **MCBU Course Information System:** Used to scrape course codes, names, semester data, and multi-tier prerequisite chains.
+2. **AVESIS (Academic Data Management System):** Used to extract academic staff attributes, including titles, institutional email addresses, and official profile URLs.
+
+*Note: Data was collected using an automated Python pipeline leveraging **Selenium** for dynamic content handling and **BeautifulSoup** for HTML parsing, cleaned with **Pandas**, and mapped to the structural schema (TBox) to generate 1,977 RDF triples.*
+
+---
+
+## 📂 Repository Structure
+
+The repository is organized as follows to fulfill all semantic web and deployment constraints:
+
+```text
+├── ontology/
+│   └── university-knowledge-graph-v2.rdf  # Core OWL ontology file (Turtle format)
+├── shacl/
+│   └── shacl-shapes.ttl                   # SHACL constraints for data validation
+├── queries/
+│   ├── query1_software_staff.sparql       # SPARQL query for sub-field staff retrieval
+│   ├── query2_transitive_prereq.sparql    # SPARQL query testing transitive prerequisites
+│   ├── query3_professor_emails.sparql     # SPARQL query for professor contact details
+│   └── query4_student_enrollments.sparql  # SPARQL query for per-student schedules
+├── src/
+│   ├── scraper.py                         # Python automation script (Selenium & BeautifulSoup)
+│   ├── rdf_mapper.py                      # Relational CSV-to-RDF triple generator
+│   ├── validator.py                       # pySHACL validation engine script
+│   └── llm_interface.py                   # Claude API Natural Language to SPARQL pipeline
+├── docs/                                  # WIDOCO automated ontology documentation
+│   └── index.html                         # Interactive visualization and documentation
+└── README.md                              # Project documentation overview
 
 
+```
+
+### 1. Running Data Validation (SHACL)
+
+To test data integrity and see the validation constraints in action (including the intentional validation failure of the incomplete `:wrong_student` record):
+
+```bash
+python src/validator.py
+
+```
+
+### 2. Executing SPARQL Queries Programmatically
+
+You can run the predefined SPARQL queries on the loaded Turtle memory graph:
+
+```bash
+python src/rdf_mapper.py
+
+```
+
+*Alternatively, you can open `ontology/university-knowledge-graph-v2.rdf` in **Protégé** or **GraphDB** to execute queries directly inside their respective SPARQL Query tabs.*
+
+### 3. Running the LLM Integration (Natural Language Interface)
+
+To launch the semantic natural language interface using Claude Sonnet, make sure to export your API key first:
+
+```bash
+export ANTHROPIC_API_KEY="your-api-key-here"
+python src/llm_interface.py
+
+```
+
+---
+
+## 👥 Team Members
+
+This project was developed collaboratively by:
+ 
+**Efe Şamil Sarıgül** 
+
+**Ayça Selda Keskin** 
+
+
+
+---
+
+For a detailed look into the TBox/ABox conceptual decisions, axiom justifications, and technical outputs, please explore the interactive documentation inside the `docs/` folder or read our full project report.
